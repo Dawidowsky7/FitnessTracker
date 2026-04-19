@@ -1,4 +1,4 @@
-Laboratorium III - Pierwsze repozytorium JPA i proste zapytania - stan na 18.04.2026 09:00
+Laboratorium III - Pierwsze repozytorium JPA i proste zapytania - stan na 19.04.2026 16:15
 
 **Uwaga - Przed przystąpieniem do zadania należy mieć ukończone LAB01 oraz LAB02.**
 
