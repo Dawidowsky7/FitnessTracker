@@ -3,13 +3,16 @@ package pl.wsb.fitnesstracker.user.internal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import pl.wsb.fitnesstracker.user.api.User;
-import pl.wsb.fitnesstracker.user.api.UserProvider;
-import pl.wsb.fitnesstracker.user.api.UserService;
+import pl.wsb.fitnesstracker.user.api.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of {@link UserService} and {@link UserProvider}.
+ * Handles all business logic related to user management.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -23,6 +26,24 @@ class UserServiceImpl implements UserService, UserProvider {
         if (user.getId() != null) {
             throw new IllegalArgumentException("User has already DB ID, update is not permitted!");
         }
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(final Long userId) {
+        log.info("Deleting User with id={}", userId);
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException(userId);
+        }
+        userRepository.deleteById(userId);
+    }
+
+    @Override
+    public User updateUser(final Long userId, final UserDto updated) {
+        log.info("Updating User with id={}", userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+        user.update(updated.firstName(), updated.lastName(), updated.birthdate(), updated.email());
         return userRepository.save(user);
     }
 
@@ -41,4 +62,13 @@ class UserServiceImpl implements UserService, UserProvider {
         return userRepository.findAll();
     }
 
+    @Override
+    public List<User> findUsersByEmailContaining(final String emailFragment) {
+        return userRepository.findByEmailContainingIgnoreCase(emailFragment);
+    }
+
+    @Override
+    public List<User> findUsersOlderThan(final LocalDate date) {
+        return userRepository.findByBirthdateBefore(date);
+    }
 }

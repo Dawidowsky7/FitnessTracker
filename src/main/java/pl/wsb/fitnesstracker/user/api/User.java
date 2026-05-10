@@ -9,6 +9,9 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 
+/**
+ * JPA entity representing a user of the FitnessTracker system.
+ */
 @Entity
 @Table(name = "users")
 @Getter
@@ -33,6 +36,14 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    /**
+     * Creates a new User.
+     *
+     * @param firstName user's first name
+     * @param lastName  user's last name
+     * @param birthdate user's date of birth
+     * @param email     user's email address (must be unique)
+     */
     public User(
             final String firstName,
             final String lastName,
@@ -44,4 +55,19 @@ public class User {
         this.email = email;
     }
 
+    /**
+     * Updates the fields of this user with the provided values.
+     * Only non-null values in the provided parameters are applied.
+     *
+     * @param firstName new first name (or null to keep current)
+     * @param lastName  new last name (or null to keep current)
+     * @param birthdate new birthdate (or null to keep current)
+     * @param email     new email (or null to keep current)
+     */
+    public void update(String firstName, String lastName, LocalDate birthdate, String email) {
+        if (firstName != null) this.firstName = firstName;
+        if (lastName != null) this.lastName = lastName;
+        if (birthdate != null) this.birthdate = birthdate;
+        if (email != null) this.email = email;
+    }
 }
